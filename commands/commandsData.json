@@ -1,0 +1,31 @@
+{
+    "userCommands": [
+        {
+            "name": "earn",
+            "description": "Zarabiaj wirtualne monety",
+            "adminOnly": false
+        },
+        {
+            "name": "balance",
+            "description": "Pokazuje balans użytkownika",
+            "adminOnly": false
+        },
+        {
+            "name": "deposit",
+            "description": "Wpłać wirtualne monety na swoje konto",
+            "adminOnly": false
+        }
+    ],
+    "adminCommands": [
+        {
+            "name": "editbalance",
+            "description": "Edytuje balans innego użytkownika (tylko dla administratorów)",
+            "adminOnly": true
+        },
+        {
+            "name": "shutdown",
+            "description": "Shutdown Roulete-BOT (Only for the admin)",
+            "adminOnly": true
+        }
+    ]
+}
