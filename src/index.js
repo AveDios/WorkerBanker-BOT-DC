@@ -1,15 +1,14 @@
-const { Client, GatewayIntentBits } = require("discord.js");
+const { Client, GatewayIntentBits, REST } = require("discord.js");
 const commands = require("./commands/commands.js");
+const config = require("../run/config.json");
 
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-    ],
+    intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent, ],
 });
+const rest = new REST().setToken(config.token);
 
-commands.registerAll(client);
+commands.registerAll(client, rest, config);
 
 client.on("interactionCreate", async (interaction) => {
     if (!interaction.isCommand()) return; // Czy interakcja jest komendą
@@ -27,4 +26,4 @@ client.on("interactionCreate", async (interaction) => {
     }
 });
 
-client.login(require("./config.json").token); // Logowanie bota
+client.login(config.token); // Logowanie bota

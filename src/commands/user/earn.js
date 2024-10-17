@@ -19,28 +19,18 @@ module.exports = {
             if (timePassed < COOLDOWN_TIME) {
                 const timeLeft = (COOLDOWN_TIME - timePassed) / 1000;
                 return interaction.reply(
-                    `Musisz poczekać jeszcze ${Math.round(
-                        timeLeft
-                    )} sekund przed ponownym użyciem tej komendy.`
+                    `Musisz poczekać jeszcze ${Math.round(timeLeft)} sekund przed ponownym użyciem tej komendy.`
                 );
             }
         }
 
-        const earnAmount = Math.floor(Math.random() * 100) + 1; // Losowa kwota do zarobienia
-
+        const earnAmount = Math.floor(Math.random() * 100) + 1;
         setUserBalance(userId, earnAmount, (success) => {
             if (success) {
-                interaction.reply({
-                    // Użyj interaction.reply zamiast message.reply
-                    content: `${interaction.user.username}, zarobiłeś ${earnAmount} monet!`,
-                });
-
-                cooldowns.set(userId, Date.now()); // Ustaw czas użycia komendy
+                interaction.reply({ content: `${interaction.user.username}, zarobiłeś ${earnAmount} monet!` });
+                cooldowns.set(userId, Date.now());
             } else {
-                interaction.reply({
-                    // Użyj interaction.reply zamiast message.reply
-                    content: "Wystąpił błąd podczas zarabiania.",
-                });
+                interaction.reply({ content: "Wystąpił błąd podczas zarabiania." });
             }
         });
     }

@@ -1,14 +1,12 @@
 {
   "name": "workerbanker-bot",
   "version": "1.0.0",
-  "description": "",
+  "license": "ISC",
+  "type": "commonjs",
   "main": "./src/index.js",
   "scripts": {
     "start": "node ./src/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "discord.js": "^14.16.3",
     "sqlite3": "^5.1.7"

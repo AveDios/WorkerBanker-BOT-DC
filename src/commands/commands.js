@@ -1,27 +1,43 @@
-const { PermissionFlagsBits } = require("discord.js");
+const { PermissionFlagsBits, Collection, Routes } = require("discord.js");
+const path = require("path");
+const fs = require("fs");
 
+const commands = [];
 const foldersPath = __dirname;
-const commandFolders = fs.readdirSync(foldersPath);
+const commandFiles = fs.readdirSync(foldersPath, { recursive: true })
+  .filter(e => e.includes("\\"))
+  .map(filePath => path.join(foldersPath, filePath));
 
-function registerAll(client) {
+function registerAll(client, rest, config) {
   client.commands = new Collection();
 
-  for (const folder of commandFolders) {
-    const commandsPath = path.join(foldersPath, folder);
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
-    for (const file of commandFiles) {
-      const filePath = path.join(commandsPath, file);
-      const command = require(filePath);
+  for (const commandFile of commandFiles) {
+    const command = require(commandFile);
 
-      if ("data" in command && "execute" in command) {
-        if (command.adminOnly) {
-          command.data.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
-          command.data.description += " (tylko dla administratorów)";
-        }
-        client.commands.set(command.data.name, command);
-      } else {
-        console.log(`[OSTRZEŻENIE] Komenda ${filePath} nie posiada wymaganych wartości "data" lub "execute".`);
+    if ("data" in command && "execute" in command) {
+      if (command.adminOnly) {
+        command.data.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+        command.data.description += " (tylko dla administratorów)";
       }
+      client.commands.set(command.data.name, command);
+      commands.push(command.data.toJSON());
+    } else {
+      console.log(`[OSTRZEŻENIE] Komenda ${commandFile} nie posiada wymaganych wartości "data" lub "execute".`);
     }
   }
+
+  // Rejestrowanie komend
+  (async () => {
+    try {
+      const data = await rest.put(
+        Routes.applicationCommands(config.clientId),
+        { body: commands },
+      );
+      console.log(`Zarejestrowano ${data.length} komend.`);
+    } catch (error) {
+      console.error(error);
+    }
+  })();
 }
+
+module.exports = { registerAll };

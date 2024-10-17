@@ -1,6 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
 
-const db = new sqlite3.Database("./balance.db", (err) => {
+const db = new sqlite3.Database("./run/balance.db", (err) => {
     if (err) {
         console.error("Błąd połączenia z bazą danych:", err.message);
     } else {
@@ -14,7 +14,7 @@ const db = new sqlite3.Database("./balance.db", (err) => {
     }
 });
 
-const getUserBalance = (userId, callback) => {
+function getUserBalance(userId, callback) {
     db.get("SELECT balance FROM users WHERE id = ?", [userId], (err, row) => {
         if (err) {
             console.error(err.message);
@@ -43,4 +43,4 @@ function setUserBalance(userId, amount, callback) {
     );
 }
 
-module.exports = { getUserBalance, setUserBalance };
+module.exports = { setUserBalance, getUserBalance };
